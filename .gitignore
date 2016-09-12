@@ -1,0 +1,37 @@
+# vi:syntax=sh
+
+*.swp
+*.pyc
+*.eps
+*.pdf
+*.jpg
+*.jpeg
+*.png
+*.gif
+*.mp4
+*.ogv
+
+# MAC
+.DS_Store
+
+#IPython
+.ipynb_checkpoints/
+jupyter_examples/.ipynb_checkpoints/
+
+# MERGETOOL
+*.orig
+
+# vim & python-mode
+.ropeproject/
+
+# PyCharm
+.idea
+
+# Sphinx Docs
+docs/_build/
+
+# Install
+/build
+/dist
+/PyncareDynSys.egg-info
+/MANIFEST
