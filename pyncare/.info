@@ -1,0 +1,16 @@
+# ------------------------------------------------------
+#	File:        .info
+#	Author:      elchinot7 
+#	Email:       efraazu@gmail.com
+#	Github:      https://github.com/elchinot7
+#	Description: INFO
+# ------------------------------------------------------
+
+\\033[31m ToDo \\033[0m:
+    \\033[31m ►  \\033[0m Change \\033[31m plot_flow \\033[0m such that this function can be independent of \\033[31m plot_orbit \\033[0m
+    \\033[31m ►  \\033[0m Rename \\033[32m plot_flow ⟼   plot_flow_over_orbit \\033[0m
+    \\033[31m ►  \\033[0m Rename \\033[32m plot_flow_from_function ⟼   plot_flow_over_function \\033[0m
+    \\033[31m ►  \\033[0m Both \\033[32m plot_flow_over_orbit \\033[0m and \\033[32m plot_flow_over_function \\033[0m must be independent functions that must be called \\033[31m explicitly \\033[0m
+
+\\033[33mBugs\\033[0m:
+    \\033[33m 💀 \\033[0m \\033[31m AVOID MAKE COPIES OF \\033[0m \\033[32m self.solution \\033[0m 

@@ -30,7 +30,7 @@ endif
 # --------------------------------------
 #INSTALL_OPT = install
 INSTALL_OPT = develop
-INSTALL_DEST = ~/Programs/poincare_dynys
+INSTALL_DEST = ~/Programs/pyncare
 # --------------------------------------
 SCRIPTS_DIR = examples
 #PYTHON_FILE ?= quintessence_1.py
@@ -76,7 +76,7 @@ ENDC = \033[0m
 # --------------------------------------------------------------
 help:
 	@echo "------------------------------------------------------"
-	@echo -e "                $(UNDERLINE)$(REDC) < PyncareDynSys >$(ENDC)"
+	@echo -e "                    $(UNDERLINE)$(REDC) < Pyncare >$(ENDC)"
 	@echo -e "                   $(GREENC) Makefile Menu$(ENDC)"
 	@echo "------------------------------------------------------"
 	@echo "Please use 'make <target>' where target is one of:"
@@ -87,9 +87,9 @@ help:
 	@echo
 	@echo -e "$(REDC)plot$(ENDC)       > Solve & Plot"
 	@echo
-	@echo -e "$(REDC)install$(ENDC)    > Install PyncareDynSys"
+	@echo -e "$(REDC)install$(ENDC)    > Install Pyncare"
 	@echo
-	@echo -e "$(REDC)reinstall$(ENDC)  > Reinstall PyncareDynSys"
+	@echo -e "$(REDC)reinstall$(ENDC)  > Reinstall Pyncare"
 	@echo
 	@echo -e "$(REDC)docs$(ENDC)       > Generate & shows documentation"
 	@echo

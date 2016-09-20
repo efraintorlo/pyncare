@@ -8,25 +8,25 @@ $ python setup.py help
 
 
 from setuptools import setup
-import pyncaredynsys
+import pyncare
 
 #  ##############
-VERSION = pyncaredynsys.__version__
-NAME = pyncaredynsys.__NAME__
-AUTHOR = pyncaredynsys.__author__
+VERSION = pyncare.__version__
+NAME = pyncare.__name__
+AUTHOR = pyncare.__author__
 
 
 setup_args = dict(name=NAME,
                   version=VERSION,
                   author=AUTHOR,
                   author_email='efraazul@gmail.com',
-                  url='https://bitbucket.org/elchinot7/cosmo_dyn_sys',
-                  packages=['pyncaredynsys'],
+                  url='https://bitbucket.org/elchinot7/pyncare',
+                  packages=['pyncare'],
                   # scripts=[],
                   package_data={},
                   license="Modified BSD license",
-                  description="""A generic Solver and Ploter for Dynamical
-                  Systems Projected over the Poincaré sphere.""",
+                  description="""A generic Solver and Ploter for Dynamical\
+                  Systems Projected over the Poincare sphere.""",
                   long_description=open('Readme.rst').read(),
                   classifiers=["Topic :: Utilities",
                                "Intended Audience :: Science/Research",
