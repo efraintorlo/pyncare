@@ -2,7 +2,7 @@ import numpy as np
 
 
 def plot_sphere(ax, phi_i=0, phi_f=2.0*np.pi,
-                theta_i=0, theta_f=np.pi/2, res=50, **kwargs):
+                theta_i=0, theta_f=np.pi/2, res=50, r=1, **kwargs):
     """docstring for plot_3D_sphere_surface
     Plot two regions in the sphere"""
     if kwargs is not None and 'color' in kwargs:
@@ -16,22 +16,28 @@ def plot_sphere(ax, phi_i=0, phi_f=2.0*np.pi,
 
     phi = np.linspace(phi_i, phi_f, res)
     theta = np.linspace(theta_i, theta_f, res)
-    x = 1 * np.outer(np.cos(phi), np.sin(theta))
-    y = 1 * np.outer(np.sin(phi), np.sin(theta))
-    z = 1 * np.outer(np.ones(np.size(phi)), np.cos(theta))
+    x = r * np.outer(np.cos(phi), np.sin(theta))
+    y = r * np.outer(np.sin(phi), np.sin(theta))
+    z = r * np.outer(np.ones(np.size(phi)), np.cos(theta))
     ax.plot_surface(x, y, z, rstride=1, cstride=1, color=color,
                     linewidth=0.0, alpha=alpha, antialiased=False)
 
 
 def plot_latitude(ax, theta_0=np.pi/4, r=1.0, phi_i=0, phi_f=2.0*np.pi, res=50, **kwargs):
     """plot a Parallel over the unit sphere"""
-
     phi = np.linspace(phi_i, phi_f, res)
     theta = theta_0
     x = r * np.sin(theta) * np.cos(phi)
     y = r * np.sin(theta) * np.sin(phi)
     z = r * np.ones(res) * np.cos(theta)
     ax.plot(x, y, z, **kwargs)
+
+
+def plot_circle(ax, r=1, theta_i=0, theta_f=2.0*np.pi, res=50, **kwargs):
+    theta = np.linspace(theta_i, theta_f, res)
+    x = r * np.cos(theta)
+    y = r * np.sin(theta)
+    ax.plot(x, y, **kwargs)
 
 
 def plot_quiver_2D(ax, x, y, u, v, **kwargs):

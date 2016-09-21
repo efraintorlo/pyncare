@@ -1,4 +1,5 @@
 from poincare import PoincareCompact
+from dynsysbase import BaseDynSys
 import utils as utils
 import models as models
 import contraints as constraints
