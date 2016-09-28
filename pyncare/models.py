@@ -1,5 +1,6 @@
 import numpy as np
 
+
 def compact_dyn_sys_phi2(init, t=None, modelpars=[]):
         '''
         This is the system dy_i/dt = f(y_i)
