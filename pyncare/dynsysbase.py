@@ -99,42 +99,6 @@ class BaseDynSys(object):
                                  label=label)
             self._orbits.append(_orbit)          # list full of <orbit.Orbit> instances
 
-        # self.add_flow_2D = add_flow_2D
-        # self.add_flow_3D = add_flow_3D
-
-        # if self.Ndim == 2:
-        #     self.ax = self.fig.add_subplot(111)
-        #     self.ax.set_title('{}'.format(self.model.__doc__))
-        #     self.ax.set_xlabel(self.var_names['x'])
-        #     self.ax.set_ylabel(self.var_names['y'])
-        # elif self.Ndim > 2:
-        #     self.ax = Axes3D(self.fig)
-        #     # self.ax = self.fig.gca(projection='3d')
-        #     if add_title is True:
-        #         self.ax.text2D(0.05, 0.95,
-        #                        'Dynamical System@{}\nDescription:{}'.format(self.model.__name__,
-        #                                                                     self.model.__doc__),
-        #                        transform=self.ax.transAxes)
-        #     self.ax.set_xlabel(self.var_names['x'])
-        #     self.ax.set_ylabel(self.var_names['y'])
-        #     self.ax.set_zlabel(self.var_names['z'])
-
-        # if project_2D:
-        #     self.project_2D = project_2D  # Must be a list ['xy', 'xz', 'yz']
-        #     self.fig_project_2D = plt.figure()
-        #     self.ax_project_2D = self.fig_project_2D.add_subplot(111)
-        #     self.ax_project_2D.set_xlabel(self.var_names[self.project_2D[0][0]])
-        #     self.ax_project_2D.set_ylabel(self.var_names[self.project_2D[0][1]])
-        #     if add_title is True:
-        #         self.ax_project_2D.annotate('Dynamical System@{}\nDescription:{}\nProjection: {}'.format(self.model.__name__,
-        #                                                                                                  self.model.__doc__,
-        #                                                                                                  self.project_2D),
-        #                                     xy=(0.01, 0.9), xytext=(0.01, 0.9), textcoords='axes fraction')
-        # else:
-        #     self.project_2D = False
-
-        # self.add_legend = add_legend
-
     def __str__(self):
         return self.out_info()
 
@@ -160,7 +124,7 @@ class BaseDynSys(object):
         out += '\n=====================================\n'
         return out
 
-    def plot_orbits(self, ax, vars_to_plot, colors=None, **kwargs):
+    def plot_orbits(self, ax, vars_to_plot, colors=None, add_flow=True, **kwargs):
         if colors is None:
             colorcycler = cycle(self.colors)
         else:
@@ -170,9 +134,10 @@ class BaseDynSys(object):
             color = next(colorcycler)
             orb.plot_orbit(ax=ax, vars_to_plot=vars_to_plot,
                            color=color, **kwargs)
-            orb.plot_flow_over_orbit(ax=ax, vars_to_plot=vars_to_plot,
-                                     flow_index=self.orbits[i]['arrow_pos'],
-                                     color=color, **kwargs)
+            if add_flow:
+                orb.plot_flow_over_orbit(ax=ax, vars_to_plot=vars_to_plot,
+                                         flow_index=self.orbits[i]['arrow_pos'],
+                                         color=color, **kwargs)
         ax.legend(loc='best')
         ax.set_xlabel(self.var_names[vars_to_plot[0]])
         ax.set_ylabel(self.var_names[vars_to_plot[1]])

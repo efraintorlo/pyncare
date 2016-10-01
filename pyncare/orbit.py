@@ -123,6 +123,9 @@ class Orbit(object):
             ind = self.init_cond.keys().index(key)
             indexes.append(ind)
 
+        vels = [self.model(self.solution[i], self.model_pars) for i in flow_index if (i < len(self.solution[:, indexes[0]]))]
+        # print 'vels = ', vels
+
         if len(indexes) > 1:
             x = np.array([self.solution[:, indexes[0]][i] for i in flow_index if (i < len(self.solution[:, indexes[0]]))])
             y = np.array([self.solution[:, indexes[1]][i] for i in flow_index if (i < len(self.solution[:, indexes[1]]))])
@@ -131,11 +134,16 @@ class Orbit(object):
             z = np.array([self.solution[:, indexes[2]][i] for i in flow_index if (i < len(self.solution[:, indexes[2]]))])
 
         if len(indexes) == 2:
-            U, V = zip(*[self.model([x1, y1], self.model_pars) for x1, y1 in zip(x, y)])
+            # U, V = zip(*[self.model([x1, y1], self.model_pars) for x1, y1 in zip(x, y)])
+            U = [vel[indexes[0]] for vel in vels]
+            V = [vel[indexes[1]] for vel in vels]
             plot_quiver_2D(ax=ax, x=x, y=y, u=U, v=V, **kwargs)
 
         elif len(indexes) == 3:
-            U, V, W = zip(*[self.model_pars([x1, y1, z1], self.model_pars) for x1, y1, z1 in zip(x, y, z)])
+            # U, V, W = zip(*[self.model_pars([x1, y1, z1], self.model_pars) for x1, y1, z1 in zip(x, y, z)])
+            U = [vel[indexes[0]] for vel in vels]
+            V = [vel[indexes[1]] for vel in vels]
+            W = [vel[indexes[2]] for vel in vels]
             plot_quiver_3D(ax=ax, x=x, y=y, z=z, u=U, v=V, w=W, **kwargs)
 
     def plot_flow_over_function(self, ax, indep_vars, function, function_dot,
