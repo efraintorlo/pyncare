@@ -1,18 +1,24 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+"""
+    File:        utils.py
+    Author:      Efrain Torres-Lomas
+    Email:       efrain@fisica.ugto.mx
+    Github:      https://github.com/elchinot7
+    Description: Some generic functions used in Pyncare
+"""
+
 import numpy as np
 
 
 def plot_sphere(ax, phi_i=0, phi_f=2.0*np.pi,
                 theta_i=0, theta_f=np.pi/2, res=50, r=1, **kwargs):
-    """docstring for plot_3D_sphere_surface
-    Plot two regions in the sphere"""
-    if kwargs is not None and 'color' in kwargs:
-        color = kwargs['color']
-    else:
-        color = '0.7'
-    if kwargs is not None and 'alpha' in kwargs:
-        alpha = kwargs['alpha']
-    else:
-        alpha = '1.0'
+    """
+    docstring for plot_3D_sphere_surface
+    Plot two regions in the sphere
+    """
+    color = kwargs.get('color', '0.7')
+    alpha = kwargs.get('alpha', '1.0')
 
     phi = np.linspace(phi_i, phi_f, res)
     theta = np.linspace(theta_i, theta_f, res)
@@ -24,7 +30,9 @@ def plot_sphere(ax, phi_i=0, phi_f=2.0*np.pi,
 
 
 def plot_latitude(ax, theta_0=np.pi/4, r=1.0, phi_i=0, phi_f=2.0*np.pi, res=50, **kwargs):
-    """plot a Parallel over the unit sphere"""
+    """
+    plot a Parallel over the unit sphere
+    """
     phi = np.linspace(phi_i, phi_f, res)
     theta = theta_0
     x = r * np.sin(theta) * np.cos(phi)
@@ -41,47 +49,28 @@ def plot_circle(ax, r=1, theta_i=0, theta_f=2.0*np.pi, res=50, **kwargs):
 
 
 def plot_quiver_2D(ax, x, y, u, v, **kwargs):
-    if kwargs is not None and 'angles' in kwargs:
-        angles = kwargs['angles']
-    else:
-        angles = 'xy'
-    if kwargs is not None and 'scale_units' in kwargs:
-        scale_units = kwargs['scale_units']
-    else:
-        scale_units = 'xy'
-    if kwargs is not None and 'color' in kwargs:
-        color = kwargs['color']
-    else:
-        color = 'k'
-    if kwargs is not None and 'pivot' in kwargs:
-        pivot = kwargs['pivot']
-    else:
-        pivot = 'mid'
-    if kwargs is not None and 'scale' in kwargs:
-        scale = kwargs['scale']
-    else:
-        scale = None
-    if kwargs is not None and 'width' in kwargs:
-        width = kwargs['width']
-    else:
-        width = 0.003
-    if kwargs is not None and 'headlength' in kwargs:
-        headlength = kwargs['headlength']
-    else:
-        headlength = 7
-    if kwargs is not None and 'headwidth' in kwargs:
-        headwidth = kwargs['headwidth']
-    else:
-        headwidth = 5
+    """
+    Generic vector field flow  plotter
+    """
+    angles = kwargs.get('angles', 'xy')
 
-    if kwargs is not None and 'norm' in kwargs:
-        norm = kwargs['norm']
-    else:
-        norm = True
-    if kwargs is not None and 'rescale' in kwargs:
-        rescale = kwargs['rescale']
-    else:
-        rescale = 1.0
+    scale_units = kwargs.get('scale_units', 'xy')
+
+    color = kwargs.get('color', 'k')
+
+    pivot = kwargs.get('pivot', 'mid')
+
+    scale = kwargs.get('scale', None)
+
+    width = kwargs.get('width', 0.003)
+
+    headlength = kwargs.get('headlength', 7)
+
+    headwidth = kwargs.get('headwidth', 5)
+
+    norm = kwargs.get('norm', True)
+
+    rescale = kwargs.get('rescale', 1.0)
 
     u = np.array(u)
     v = np.array(v)
@@ -101,30 +90,17 @@ def plot_quiver_2D(ax, x, y, u, v, **kwargs):
 
 
 def plot_quiver_3D(ax, x, y, z, u, v, w, **kwargs):
-    if kwargs is not None and 'color' in kwargs:
-        color = kwargs['color']
-    else:
-        color = 'k'
-    if kwargs is not None and 'length' in kwargs:
-        length = kwargs['length']
-    else:
-        length = 0.05
-    if kwargs is not None and 'arrow_length_ratio' in kwargs:
-        arrow_length_ratio = kwargs['arrow_length_ratio']
-    else:
-        arrow_length_ratio = 1
-    if kwargs is not None and 'linewidths' in kwargs:
-        linewidths = kwargs['linewidths']
-    else:
-        linewidths = 1.0
-    if kwargs is not None and 'norm' in kwargs:
-        norm = kwargs['norm']
-    else:
-        norm = True
-    if kwargs is not None and 'rescale' in kwargs:
-        rescale = kwargs['rescale']
-    else:
-        rescale = 1.0
+    color = kwargs.get('color', 'k')
+
+    length = kwargs.get('length', 0.05)
+
+    arrow_length_ratio = kwargs.get('arrow_length_ratio', 1)
+
+    linewidths = kwargs.get('linewidths', 1.0)
+
+    norm = kwargs.get('norm', True)
+
+    rescale = kwargs.get('rescale', 1.0)
 
     u = np.array(u)
     v = np.array(v)

@@ -16,16 +16,6 @@ from utils import plot_latitude
 from utils import plot_circle
 
 
-# def project_on_poincare(model):
-#     def projection(**kwargs):
-#         model_field = model(**kwargs)
-#         X = model_field[0]
-#         Y = model_field[1]
-#         Z = 1.0 - X**2.0 - Y**2.0
-#         return [X, Y, Z]
-#     return projection
-
-
 class PoincareCompact(BaseDynSys):
 
     def __init__(self, **kwargs):
@@ -40,9 +30,7 @@ class PoincareCompact(BaseDynSys):
         for i, orb in enumerate(self._orbits):
             color = next(colorcycler)
             orb.plot_function(ax=ax, indep_vars=vars_to_plot,
-                              # flow_index=self.orbits[i]['arrow_pos'],
                               function=self.sphere_z,
-                              # args=['x', 'y'],
                               color=color,
                               **kwargs
                               )
@@ -88,7 +76,6 @@ class PoincareCompact(BaseDynSys):
         Y = np.array(args[1])
         Z = self.sphere_z([X, Y])
         U, V = self.model([X, Y])
-        # return np.sqrt(- 2.0 * x * u - 2.0 * y * v)
         return (- X * U - Y * V)/Z
 
     def plot_poincare_surface(self, ax, phi_i=0, phi_f=2.0*np.pi,
@@ -109,7 +96,6 @@ if __name__ == "__main__":
     from mpl_toolkits.mplot3d import Axes3D
     from collections import OrderedDict
     from models import compact_dyn_sys_phi2
-    # from utils import plot_latitude
 
     fig = plt.figure()
     # ax = fig.add_subplot(111)

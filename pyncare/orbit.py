@@ -5,15 +5,14 @@
     Author:      Efrain Torres-Lomas
     Email:       efrain@fisica.ugto.mx
     Github:      https://github.com/elchinot7
-    Description: ToDo
+    Description: This contains the more basic class in the package, namely, the
+                 Orbit. This class define a orbit ( a solution ) for the generic
+                 dynamical system. Orbit is able to be integrated (evolved) and
+                 plotted.
 
 """
 import numpy as np
-import matplotlib.pyplot as plt
 from scipy.integrate import odeint
-# from mpl_toolkits.mplot3d import Axes3D
-# plt.ion()
-# from itertools import cycle
 import sys
 from utils import plot_quiver_2D, plot_quiver_3D
 
@@ -38,13 +37,12 @@ class Orbit(object):
             t = self.t
         self.solution = odeint(self.model, self.init, t=t, args=(self.model_pars,))
         self.is_solved = True
-        # return evolved
 
     def plot_orbit(self, ax, vars_to_plot, **kwargs):
         if len(vars_to_plot) > 3:
             sys.exit("We can't plot in Ndim > 3")
 
-        if not all(key in self.names for key in vars_to_plot):  # check vars exist
+        if not all(key in self.names for key in vars_to_plot):  # check vars to plot exist
             sys.exit("vars_to_plot are not a subset of vars")
 
         if kwargs is not None and 't' in kwargs:
@@ -57,16 +55,12 @@ class Orbit(object):
         # plot_list = []
         indexes = []
         for key in vars_to_plot:
-            # print key, self.init_cond[key]
             ind = self.init_cond.keys().index(key)
             indexes.append(ind)
-            # plot_list.append(self.solution[:, ind])
 
         if len(vars_to_plot) is 2:
-            # ax.plot(plot_list[0], plot_list[1], label=self.label, **kwargs)
             ax.plot(self.solution[:, indexes[0]], self.solution[:, indexes[1]], label=self.label, **kwargs)
         elif len(vars_to_plot) is 3:
-            # ax.plot(plot_list[0], plot_list[1], plot_list[2], label=self.label, **kwargs)
             ax.plot(self.solution[:, indexes[0]], self.solution[:, indexes[1]], self.solution[:, indexes[2]],
                     label=self.label, **kwargs)
 
@@ -134,13 +128,11 @@ class Orbit(object):
             z = np.array([self.solution[:, indexes[2]][i] for i in flow_index if (i < len(self.solution[:, indexes[2]]))])
 
         if len(indexes) == 2:
-            # U, V = zip(*[self.model([x1, y1], self.model_pars) for x1, y1 in zip(x, y)])
             U = [vel[indexes[0]] for vel in vels]
             V = [vel[indexes[1]] for vel in vels]
             plot_quiver_2D(ax=ax, x=x, y=y, u=U, v=V, **kwargs)
 
         elif len(indexes) == 3:
-            # U, V, W = zip(*[self.model_pars([x1, y1, z1], self.model_pars) for x1, y1, z1 in zip(x, y, z)])
             U = [vel[indexes[0]] for vel in vels]
             V = [vel[indexes[1]] for vel in vels]
             W = [vel[indexes[2]] for vel in vels]
@@ -165,15 +157,6 @@ class Orbit(object):
             indexes.append(ind)
             indep_vars_list.append(self.solution[:, ind])
 
-        # if args is None:
-        #     f = function([self.solution[:, 0], self.solution[:, 1]])
-        # else:
-        #     args_list = []
-        #     for key in args:
-        #         ind = self.init_cond.keys().index(key)
-        #         args_list.append(self.solution[:, ind])
-        #     f = function(args_list)
-
         if self.Ndim > 0:
             x = np.array([self.solution[:, 0][i] for i in flow_index if (i < len(self.solution[:, 0]))])
         if self.Ndim > 1:
@@ -181,21 +164,15 @@ class Orbit(object):
 
         f = function([x, y])
 
-        if self.Ndim == 2:
-            U, V = zip(*[self.model([x1, y1], self.model_pars) for x1, y1 in zip(x, y)])
-        # if len(indep_vars) > 0:
-        #     U = VEL[:, 0]
-        # if len(indep_vars) > 1:
-        #     V = VEL[:, indexes[1]]
-
         f_dot = function_dot([x, y])
 
+        if self.Ndim == 2:
+            U, V = zip(*[self.model([x1, y1], self.model_pars) for x1, y1 in zip(x, y)])
+
         if len(indep_vars) == 1:
-            # W = zip(*[function_dot([x1, y1], args) for x1, y1 in zip(x, y)])
             plot_quiver_2D(ax=ax, x=x, y=f, u=U, v=f_dot, **kwargs)
 
         if len(indep_vars) == 2:
-            # U, V, W = zip(*[function([x1, y1, z1], args) for x1, y1, z1 in zip(x, y, z)])
             plot_quiver_3D(ax=ax, x=x, y=y, z=f, u=U, v=V, w=f_dot, **kwargs)
 
 
@@ -226,7 +203,7 @@ def test_function_dot(args):
 
 if __name__ == "__main__":
     import collections
-    # import matplotlib.pyplot as plt
+    import matplotlib.pyplot as plt
     fig = plt.figure()
     ax = fig.add_subplot(111)
 

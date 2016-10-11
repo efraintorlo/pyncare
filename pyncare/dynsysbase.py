@@ -21,7 +21,7 @@ class BaseDynSys(object):
                  model_pars=[],
                  var_names=None,  # Dictionary
                  Ndim=None,       # Int
-                 orbits=None,     # orbits={{'vars': {'x': x0, 'y': y0, 'z': z0}, 't'=t, 'arrow_pos'=[1, 100, -1], 'label' = 'label0'}
+                 orbits=None,     # orbits = [{'vars': OrderedDict([('x', -0.8), ('y', y0)]), 't': t, 'arrow_pos': [1, 100, 200], 'label': 'label0'},]
                  t=None,          # numpy.linspace
                  lines=None,      # List of strings
                  colors=None,     # Color scheme name
@@ -83,7 +83,7 @@ class BaseDynSys(object):
                          [None, 'deep', 'muted', 'pastel', 'bright', 'dark', \
                          'colorblind', 'black']")
 
-        # If all went fine, create the Orbit Objects:
+        # If all went well, create the Orbit Objects:
         self._orbits = []  # To be filled with Orbits instances
         for orb in self.orbits:
             d0 = collections.OrderedDict()  # must be an collections.OrderedDict
