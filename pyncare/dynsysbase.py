@@ -141,6 +141,8 @@ class BaseDynSys(object):
         ax.legend(loc='best')
         ax.set_xlabel(self.var_names[vars_to_plot[0]])
         ax.set_ylabel(self.var_names[vars_to_plot[1]])
+        if len(vars_to_plot) == 3:
+            ax.set_zlabel(self.var_names[vars_to_plot[2]])
 
 
 def test_model(init, t=None, model_pars=[]):

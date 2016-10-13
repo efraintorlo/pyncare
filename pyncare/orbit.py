@@ -117,7 +117,7 @@ class Orbit(object):
             ind = self.init_cond.keys().index(key)
             indexes.append(ind)
 
-        vels = [self.model(self.solution[i], self.model_pars) for i in flow_index if (i < len(self.solution[:, indexes[0]]))]
+        vels = [self.model(init=self.solution[i], modelpars=self.model_pars) for i in flow_index if (i < len(self.solution[:, indexes[0]]))]
         # print 'vels = ', vels
 
         if len(indexes) > 1:
@@ -167,7 +167,7 @@ class Orbit(object):
         f_dot = function_dot([x, y])
 
         if self.Ndim == 2:
-            U, V = zip(*[self.model([x1, y1], self.model_pars) for x1, y1 in zip(x, y)])
+            U, V = zip(*[self.model(init=[x1, y1], modelpars=self.model_pars) for x1, y1 in zip(x, y)])
 
         if len(indep_vars) == 1:
             plot_quiver_2D(ax=ax, x=x, y=f, u=U, v=f_dot, **kwargs)
