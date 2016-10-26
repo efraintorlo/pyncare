@@ -18,7 +18,7 @@ from utils import plot_quiver_2D, plot_quiver_3D
 
 
 class Orbit(object):
-    def __init__(self, init_cond, model, model_pars, t, label=''):
+    def __init__(self, init_cond, model, model_pars, t, label='orbit'):
         self.init_cond = init_cond  # must be an collections.OrderedDict
         self.names = list(init_cond.keys())
         self.init = list(init_cond.values())
@@ -29,6 +29,12 @@ class Orbit(object):
         self.label = label
         self.solution = []
         self.is_solved = False
+
+    def __str__(self):
+        return "{} is an {} object with init cond: {} = {}".format(self.label,
+                                                                   self.__class__.__name__,
+                                                                   self.names,
+                                                                   self.init)
 
     def evolve(self, t=None):
         if self.is_solved:
@@ -117,7 +123,7 @@ class Orbit(object):
             ind = self.init_cond.keys().index(key)
             indexes.append(ind)
 
-        vels = [self.model(init=self.solution[i], modelpars=self.model_pars) for i in flow_index if (i < len(self.solution[:, indexes[0]]))]
+        vels = [self.model(init=self.solution[i], model_pars=self.model_pars) for i in flow_index if (i < len(self.solution[:, indexes[0]]))]
         # print 'vels = ', vels
 
         if len(indexes) > 1:
@@ -167,7 +173,7 @@ class Orbit(object):
         f_dot = function_dot([x, y])
 
         if self.Ndim == 2:
-            U, V = zip(*[self.model(init=[x1, y1], modelpars=self.model_pars) for x1, y1 in zip(x, y)])
+            U, V = zip(*[self.model(init=[x1, y1], model_pars=self.model_pars) for x1, y1 in zip(x, y)])
 
         if len(indep_vars) == 1:
             plot_quiver_2D(ax=ax, x=x, y=f, u=U, v=f_dot, **kwargs)
@@ -214,7 +220,8 @@ if __name__ == "__main__":
     t = np.linspace(0.0, 1.0, 10)
 
     orbit = Orbit(init_cond=d0, model=test_model, model_pars=[], t=t,
-                  label='label')
+                  label='The_Label')
+    print orbit
 
     orbit.plot_orbit(ax, vars_to_plot=['x', 'y'], lw=2, color='g')
     orbit.plot_flow_over_orbit(ax, vars_to_plot=['x', 'y'], width=0.005,

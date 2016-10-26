@@ -9,10 +9,14 @@
 
 """
 import numpy as np
+import matplotlib.pyplot as plt
 from itertools import cycle
 import sys
 import orbit
 import collections
+import warnings
+
+_DEBUG = False
 
 
 class BaseDynSys(object):
@@ -114,17 +118,21 @@ class BaseDynSys(object):
         out += '\n-------------------------------------\n'
         out += 'Equations are given by function:\n\t{}'.format(self.model.__name__)
         out += '\nNdims :\n\t{}\n'.format(self.Ndim)
-        out += 'List of initial conditions:\n'
-        if hasattr(self, 'orbits'):
-            for orb in self.orbits:
-                s = ''
-                for key, value in orb['vars'].iteritems():
-                    s += '{}={}, '.format(key, value)
-                out += '\t[{}]\n'.format(s)
+        # out += 'List of initial conditions:\n'
+        # if hasattr(self, 'orbits'):
+        #     for orb in self.orbits:
+        #         s = ''
+        #         for key, value in orb['vars'].iteritems():
+        #             s += '{}={}, '.format(key, value)
+        #         out += '\t[{}]\n'.format(s)
+        out += 'List of defined orbist:\n'
+        for orb in self._orbits:
+            out += ' > {}\n'.format(orb.__str__())
         out += '\n=====================================\n'
         return out
 
-    def plot_orbits(self, ax, vars_to_plot, colors=None, add_flow=True, **kwargs):
+    def plot_orbits(self, ax, vars_to_plot, colors=None, add_flow=True,
+                    add_legend=True, **kwargs):
         if colors is None:
             colorcycler = cycle(self.colors)
         else:
@@ -138,11 +146,74 @@ class BaseDynSys(object):
                 orb.plot_flow_over_orbit(ax=ax, vars_to_plot=vars_to_plot,
                                          flow_index=self.orbits[i]['arrow_pos'],
                                          color=color, **kwargs)
-        ax.legend(loc='best')
+        if add_legend:
+            ax.legend(loc='best')
         ax.set_xlabel(self.var_names[vars_to_plot[0]])
         ax.set_ylabel(self.var_names[vars_to_plot[1]])
         if len(vars_to_plot) == 3:
             ax.set_zlabel(self.var_names[vars_to_plot[2]])
+
+    def triangle(self, fig=None, vars_to_plot=None, colors=None, add_flow=False,
+                 add_legend=False, **kwargs):
+        if vars_to_plot is None:
+            vars_to_plot = []
+            for key, value in self.orbits[0]['vars'].iteritems():
+                vars_to_plot.append(key)
+        if len(vars_to_plot) == 2:
+            warnings.warn('Triangle plots are useful for more thatn two dimensions')
+            return
+
+        if _DEBUG:
+            print vars_to_plot
+
+        # Some magic numbers for pretty axis layout.
+        M = len(vars_to_plot) - 1
+        factor = 2.0           # size of one side of one panel
+        lbdim = 0.5 * factor   # size of left/bottom margin
+        trdim = 0.2 * factor   # size of top/right margin
+        wspace = 0.0         # w/hspace size
+        hspace = 0.0         # w/hspace size
+        plotdim = factor * M + factor * (M - 1.) * wspace
+        dim = lbdim + plotdim + trdim
+
+        # Create a new figure if one wasn't provided.
+        if fig is None:
+            fig, axes = plt.subplots(M, M, figsize=(dim, dim), sharex=True, sharey=True)
+        else:
+            try:
+                axes = np.array(fig.axes).reshape((M, M))
+            except:
+                raise ValueError("Provided figure has {0} axes, but data has "
+                                 "dimensions M={1}".format(len(fig.axes), M))
+
+        # Format the figure.
+        lb = lbdim / dim
+        tr = (lbdim + plotdim) / dim
+        fig.subplots_adjust(left=lb, bottom=lb, right=tr, top=tr,
+                            wspace=wspace, hspace=hspace)
+
+        for i in xrange(M):
+            for j in xrange(M):
+                varx = vars_to_plot[j]
+                vary = vars_to_plot[M-i]
+                subplotx = M - 1 - i
+                subploty = j
+                ax = axes[subplotx, subploty]
+                if _DEBUG:
+                    print " -----------------------------"
+                    print '(i, j) = ({},{})'.format(i, j)
+                    print 'varx = {}'.format(varx)
+                    print 'vary = {}'.format(vary)
+                    print 'subplotx = {}'.format(subplotx)
+                    print 'subploty = {}'.format(subploty)
+                if subplotx >= subploty:
+                    self.plot_orbits(ax=ax, vars_to_plot=[varx, vary],
+                                     add_flow=add_flow, add_legend=add_legend, **kwargs)
+                    if subploty != 0:
+                        ax.set_ylabel('')
+                    ax.tick_params(direction='in', pad=5)
+                else:
+                    ax.set_axis_off()
 
 
 def test_model(init, t=None, model_pars=[]):
@@ -159,7 +230,6 @@ def test_model(init, t=None, model_pars=[]):
 
 
 if __name__ == "__main__":
-    import matplotlib.pyplot as plt
     from collections import OrderedDict
 
     fig = plt.figure()
@@ -169,11 +239,11 @@ if __name__ == "__main__":
 
     var_names = {'x': r'$X$', 'y': r'$Y$'}
 
-    orbits = [{'vars': OrderedDict([('x', 0.1), ('y', 0.2)]), 't': t, 'arrow_pos': [5, 10, -20], 'label': 'label0'},
-              {'vars': OrderedDict([('x', -0.3), ('y', -0.4)]), 't': t, 'arrow_pos': [5, 10, -20], 'label': 'label1'},
-              {'vars': OrderedDict([('x', 0.2), ('y', -0.6)]), 't': t, 'arrow_pos': [5, 10, -20], 'label': 'label2'},
-              {'vars': OrderedDict([('x', 0.4), ('y', 0.3)]), 't': t, 'arrow_pos': [5, 10, -50], 'label': 'label3'},
-              {'vars': OrderedDict([('x', 0.5), ('y', 0.6)]), 't': t, 'arrow_pos': [5, 10, -50], 'label': 'label4'},
+    orbits = [{'vars': OrderedDict([('x', 0.1), ('y', 0.2)]), 't': t, 'arrow_pos': [5, 100, -20], 'label': 'label0'},
+              {'vars': OrderedDict([('x', -0.3), ('y', -0.4)]), 't': t, 'arrow_pos': [5, 100, -20], 'label': 'label1'},
+              {'vars': OrderedDict([('x', 0.2), ('y', -0.6)]), 't': t, 'arrow_pos': [5, 100, -20], 'label': 'label2'},
+              {'vars': OrderedDict([('x', 0.4), ('y', 0.3)]), 't': t, 'arrow_pos': [5, 100, -50], 'label': 'label3'},
+              {'vars': OrderedDict([('x', 0.5), ('y', 0.6)]), 't': t, 'arrow_pos': [5, 100, -50], 'label': 'label4'},
               ]
 
     dynsys = BaseDynSys(model=test_model,
@@ -183,7 +253,17 @@ if __name__ == "__main__":
                         orbits=orbits,
                         colors='bright',)
     print dynsys
-    print 'The list of generated Orbits instances:\n', dynsys._orbits
+
     dynsys.plot_orbits(ax=ax, vars_to_plot=['x', 'y'], linewidth=2)
+
+    # print 'The list of generated Orbits instances:\n', dynsys._orbits
+    # for orb in dynsys._orbits:
+    #     print orb
+
+    #  TEST FOR TRIANGLE PLOTS
+    dynsys.triangle()
+    dynsys.triangle(vars_to_plot=['x', 'y', 'y'])
+    # dynsys.triangle(vars_to_plot=['x', 'y', 'y','x'], add_legend=False)
+    dynsys.triangle(vars_to_plot=['x', 'y', 'x', 'y', 'x'], add_legend=False)
 
     plt.show()
