@@ -1,14 +1,14 @@
 # !/usr/bin/env python
 # -*- coding: utf-8 -*-
 """
-    File:        orbit.py
-    Author:      Efrain Torres-Lomas
-    Email:       efrain@fisica.ugto.mx
-    Github:      https://github.com/elchinot7
-    Description: This contains the more basic class in the package, namely, the
-                 Orbit. This class define a orbit ( a solution ) for the generic
-                 dynamical system. Orbit is able to be integrated (evolved) and
-                 plotted.
+File:        orbit.py
+Author:      Efrain Torres-Lomas
+Email:       efrain@fisica.ugto.mx
+Github:      https://github.com/elchinot7
+Description: This contains the more basic class in the package, namely, the
+             Orbit. This class define a orbit ( a solution ) for the generic
+             dynamical system. Orbit is able to be integrated (evolved) and
+             plotted.
 
 """
 import numpy as np
@@ -16,8 +16,12 @@ from scipy.integrate import odeint
 import sys
 from utils import plot_quiver_2D, plot_quiver_3D
 
+_arrow_style = "quiver"
+
 
 class Orbit(object):
+    """Orbit is the foundamental class in Pyncare."""
+
     def __init__(self, init_cond, model, model_pars, t, label='orbit'):
         self.init_cond = init_cond  # must be an collections.OrderedDict
         self.names = list(init_cond.keys())
@@ -136,13 +140,15 @@ class Orbit(object):
         if len(indexes) == 2:
             U = [vel[indexes[0]] for vel in vels]
             V = [vel[indexes[1]] for vel in vels]
-            plot_quiver_2D(ax=ax, x=x, y=y, u=U, v=V, **kwargs)
+            if _arrow_style is 'quiver':
+                plot_quiver_2D(ax=ax, x=x, y=y, u=U, v=V, **kwargs)
 
         elif len(indexes) == 3:
             U = [vel[indexes[0]] for vel in vels]
             V = [vel[indexes[1]] for vel in vels]
             W = [vel[indexes[2]] for vel in vels]
-            plot_quiver_3D(ax=ax, x=x, y=y, z=z, u=U, v=V, w=W, **kwargs)
+            if _arrow_style is 'quiver':
+                plot_quiver_3D(ax=ax, x=x, y=y, z=z, u=U, v=V, w=W, **kwargs)
 
     def plot_flow_over_function(self, ax, indep_vars, function, function_dot,
                                 flow_index, args=None, **kwargs):
@@ -176,17 +182,18 @@ class Orbit(object):
             U, V = zip(*[self.model(init=[x1, y1], model_pars=self.model_pars) for x1, y1 in zip(x, y)])
 
         if len(indep_vars) == 1:
-            plot_quiver_2D(ax=ax, x=x, y=f, u=U, v=f_dot, **kwargs)
+            if _arrow_style is 'quiver':
+                plot_quiver_2D(ax=ax, x=x, y=f, u=U, v=f_dot, **kwargs)
 
         if len(indep_vars) == 2:
-            plot_quiver_3D(ax=ax, x=x, y=y, z=f, u=U, v=V, w=f_dot, **kwargs)
+            if _arrow_style is 'quiver':
+                plot_quiver_3D(ax=ax, x=x, y=y, z=f, u=U, v=V, w=f_dot, **kwargs)
 
 
 def test_model(init, t=None, model_pars=[]):
-    '''
-    This defines the dynamical system for model
+    r"""Dynamical system for model
     :math:`V = m^2 \phi^2/2`
-    '''
+    """
     x1 = init[0]
     y1 = init[1]
     # the model equations
@@ -207,6 +214,7 @@ def test_function_dot(args):
     u, v = test_model([x, y])
     return u + 2*y*v
 
+
 if __name__ == "__main__":
     import collections
     import matplotlib.pyplot as plt
@@ -217,7 +225,7 @@ if __name__ == "__main__":
     d0['x'] = 0
     d0['y'] = 1
 
-    t = np.linspace(0.0, 1.0, 10)
+    t = np.linspace(0.0, 1.0, 50)
 
     orbit = Orbit(init_cond=d0, model=test_model, model_pars=[], t=t,
                   label='The_Label')
@@ -225,7 +233,7 @@ if __name__ == "__main__":
 
     orbit.plot_orbit(ax, vars_to_plot=['x', 'y'], lw=2, color='g')
     orbit.plot_flow_over_orbit(ax, vars_to_plot=['x', 'y'], width=0.005,
-                               flow_index=[1, 2, 5, 10], color='g')
+                               flow_index=[10, 20, 30, 40], color='g')
     orbit.plot_function(ax, indep_vars=['x'], function=test_function,
                         label='function', color='r', linewidth=2)
     orbit.plot_flow_over_function(ax, indep_vars=['x'], function=test_function,

@@ -1,12 +1,11 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """
-    File:        dynsysbase.py
-    Author:      Efrain Torres-Lomas
-    Email:       efrain@fisica.ugto.mx
-    Github:      https://github.com/elchinot7
-    Description: ToDo
-
+File:        dynsysbase.py
+Author:      Efrain Torres-Lomas
+Email:       efrain@fisica.ugto.mx
+Github:      https://github.com/elchinot7
+Description: ToDo
 """
 import numpy as np
 import matplotlib.pyplot as plt
@@ -20,6 +19,8 @@ _DEBUG = False
 
 
 class BaseDynSys(object):
+    """Generic Dynamical System."""
+
     def __init__(self,
                  model=None,
                  model_pars=[],
@@ -107,12 +108,12 @@ class BaseDynSys(object):
         return self.out_info()
 
     def __call__(self, *args, **kwargs):
-        "Displays some specific output"
+        """"Display some specific output."""
         for d in sorted(dir(self)):
             print "{}: {}". format(d, str(getattr(self, d)))
 
     def out_info(self):
-        """Prints the state of the Dynamical System"""
+        """Print the state of the Dynamical System."""
         out = '\n=====================================\n'
         out += 'This is a <<{}>> object'.format(self.__class__.__name__)
         out += '\n-------------------------------------\n'
@@ -217,10 +218,9 @@ class BaseDynSys(object):
 
 
 def test_model(init, t=None, model_pars=[]):
-    '''
-    This defines the dynamical system for model
+    r"""Dynamical system for model
     :math:`V = m^2 \phi^2/2`
-    '''
+    """
     x1 = init[0]
     y1 = init[1]
     # the model equations

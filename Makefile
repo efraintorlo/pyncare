@@ -32,8 +32,9 @@ endif
 INSTALL_OPT = develop
 INSTALL_DEST = ~/Programs/pyncare
 # --------------------------------------
-SCRIPTS_DIR = examples
-#PYTHON_FILE ?= quintessence_1.py
+#SCRIPTS_DIR = examples
+SCRIPTS_DIR = pyncare
+PYTHON_FILE ?= orbit.py
 # --------------------------------------
 
 

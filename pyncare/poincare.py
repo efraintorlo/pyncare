@@ -1,12 +1,11 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """
-    File:        poincare.py
-    Author:      Efrain Torres-Lomas
-    Email:       efrain@fisica.ugto.mx
-    Github:      https://github.com/elchinot7
-    Description: ToDo
-
+File:        poincare.py
+Author:      Efrain Torres-Lomas
+Email:       efrain@fisica.ugto.mx
+Github:      https://github.com/elchinot7
+Description: ToDo
 """
 import numpy as np
 from itertools import cycle
@@ -17,6 +16,7 @@ from utils import plot_circle
 
 
 class PoincareCompact(BaseDynSys):
+    """Dyn Sys in Caompact coordinates."""
 
     def __init__(self, **kwargs):
         super(PoincareCompact, self).__init__(**kwargs)

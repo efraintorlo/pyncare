@@ -1,9 +1,10 @@
+"""Common contraints are included here to be reused."""
+
 import numpy as np
 
 
 def plot_circle(ax, z=0.0, color='k', line_width=2):
-    """Plot a circle in 3D plots
-    to visualize the constraint"""
+    """Plot a circle in 3D plots to visualize the constraint"""
     X = np.linspace(-1, 1, 200)
     Y = np.sqrt(1.0 - X**2.0)
     Z = z
@@ -11,8 +12,7 @@ def plot_circle(ax, z=0.0, color='k', line_width=2):
 
 
 def plot_circle_2D(ax, color='k', line_width=2):
-    """Plot a circle in 2D plots
-    to visualize the constraint"""
+    """Plot a circle in 2D plots to visualize the constraint"""
     X = np.linspace(-1, 1, 200)
     Y = np.sqrt(1.0 - X**2.0)
     ax.plot(X, Y, color, linewidth=line_width)
