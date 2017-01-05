@@ -15,12 +15,15 @@ import numpy as np
 from scipy.integrate import odeint
 import sys
 from utils import plot_quiver_2D, plot_quiver_3D
+from utils import  plot_quiver_fancy_2D
 
 _arrow_style = "quiver"
+#_arrow_style = "fancy"
+
 
 
 class Orbit(object):
-    """Orbit is the foundamental class in Pyncare."""
+    """Orbit is the fundamental class in Pyncare."""
 
     def __init__(self, init_cond, model, model_pars, t, label='orbit'):
         self.init_cond = init_cond  # must be an collections.OrderedDict
@@ -111,7 +114,10 @@ class Orbit(object):
             y = indep_vars_list[1]
             ax.plot(x, y, f, **kwargs)
 
-    def plot_flow_over_orbit(self, ax, vars_to_plot, flow_index=None, **kwargs):
+    def plot_flow_over_orbit(self, ax, vars_to_plot, flow_index=None, arrow_kws=None):
+
+        if arrow_kws is None:
+            arrow_kws = dict()
 
         if flow_index is None:
             sys.exit("flow_index must be a list of integers")
@@ -141,17 +147,21 @@ class Orbit(object):
             U = [vel[indexes[0]] for vel in vels]
             V = [vel[indexes[1]] for vel in vels]
             if _arrow_style is 'quiver':
-                plot_quiver_2D(ax=ax, x=x, y=y, u=U, v=V, **kwargs)
+                plot_quiver_2D(ax=ax, x=x, y=y, u=U, v=V, arrow_kws=arrow_kws)
+            if _arrow_style is 'fancy':  # Not fully implemented
+                plot_quiver_fancy_2D(ax=ax, x=x, y=y, u=U, v=V, **kwargs)
 
         elif len(indexes) == 3:
             U = [vel[indexes[0]] for vel in vels]
             V = [vel[indexes[1]] for vel in vels]
             W = [vel[indexes[2]] for vel in vels]
             if _arrow_style is 'quiver':
-                plot_quiver_3D(ax=ax, x=x, y=y, z=z, u=U, v=V, w=W, **kwargs)
+                plot_quiver_3D(ax=ax, x=x, y=y, z=z, u=U, v=V, w=W, arrow_kws=arrow_kws)
 
     def plot_flow_over_function(self, ax, indep_vars, function, function_dot,
-                                flow_index, args=None, **kwargs):
+                                flow_index, args=None, arrow_kws=None):
+        if arrow_kws is None:
+            arrow_kws = dict()
 
         if flow_index is None:
             sys.exit("flow_index must be a list of integers")
@@ -183,11 +193,11 @@ class Orbit(object):
 
         if len(indep_vars) == 1:
             if _arrow_style is 'quiver':
-                plot_quiver_2D(ax=ax, x=x, y=f, u=U, v=f_dot, **kwargs)
+                plot_quiver_2D(ax=ax, x=x, y=f, u=U, v=f_dot, arrow_kws=arrow_kws)
 
         if len(indep_vars) == 2:
             if _arrow_style is 'quiver':
-                plot_quiver_3D(ax=ax, x=x, y=y, z=f, u=U, v=V, w=f_dot, **kwargs)
+                plot_quiver_3D(ax=ax, x=x, y=y, z=f, u=U, v=V, w=f_dot, arrow_kws=arrow_kws)
 
 
 def test_model(init, t=None, model_pars=[]):
@@ -205,14 +215,14 @@ def test_model(init, t=None, model_pars=[]):
 def test_function(args):
     x = args[0]
     y = args[1]
-    return x + y**2
+    return x + y**2 + y**3
 
 
 def test_function_dot(args):
     x = args[0]
     y = args[1]
     u, v = test_model([x, y])
-    return u + 2*y*v
+    return u + 2*y*v + (3*y**2)*v
 
 
 if __name__ == "__main__":
@@ -231,15 +241,27 @@ if __name__ == "__main__":
                   label='The_Label')
     print orbit
 
+    arrow_settings = {"angles": "xy",
+                      "scale_units=": "xy",
+                      "pivot": 'mid',
+                      "scale": 1.0,
+                      "width": 0.005,
+                      "headlength": 5,
+                      'headwidth': 5,
+                      'norm': True,
+                      'rescale': 0.1}
+
     orbit.plot_orbit(ax, vars_to_plot=['x', 'y'], lw=2, color='g')
-    orbit.plot_flow_over_orbit(ax, vars_to_plot=['x', 'y'], width=0.005,
-                               flow_index=[10, 20, 30, 40], color='g')
+    arrow_settings['color'] = 'g'
+    orbit.plot_flow_over_orbit(ax, vars_to_plot=['x', 'y'], flow_index=[10, 20, 30, 40],
+                               arrow_kws=arrow_settings)
     orbit.plot_function(ax, indep_vars=['x'], function=test_function,
                         label='function', color='r', linewidth=2)
+    arrow_settings['color'] = 'r'
     orbit.plot_flow_over_function(ax, indep_vars=['x'], function=test_function,
                                   function_dot=test_function_dot,
-                                  args=None, flow_index=[1, 3, 5, -2], width=0.005,
-                                  color='r')
+                                  args=None, flow_index=[1, 3, 5, -2],
+                                  arrow_kws=arrow_settings)
     ax.legend()
     ax.set_xlabel('X')
     ax.set_ylabel('Y')

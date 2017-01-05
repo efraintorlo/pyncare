@@ -89,7 +89,7 @@ class BaseDynSys(object):
                          'colorblind', 'black']")
 
         # If all went well, create the Orbit Objects:
-        self._orbits = []  # To be filled with Orbits instances
+        self._Orbits = []  # To be filled with Orbits instances
         for orb in self.orbits:
             d0 = collections.OrderedDict()  # must be an collections.OrderedDict
             for key, value in orb['vars'].iteritems():  # fill the initial data
@@ -97,12 +97,12 @@ class BaseDynSys(object):
             # print d0
             t = orb['t']                    # time to evolve the orbit
             label = orb['label']
-            _orbit = orbit.Orbit(init_cond=d0,
+            _Orbit = orbit.Orbit(init_cond=d0,
                                  model=self.model,
                                  model_pars=self.model_pars,
                                  t=t,
                                  label=label)
-            self._orbits.append(_orbit)          # list full of <orbit.Orbit> instances
+            self._Orbits.append(_Orbit)          # list full of <orbit.Orbit> instances
 
     def __str__(self):
         return self.out_info()
@@ -110,7 +110,7 @@ class BaseDynSys(object):
     def __call__(self, *args, **kwargs):
         """"Display some specific output."""
         for d in sorted(dir(self)):
-            print "{}: {}". format(d, str(getattr(self, d)))
+            print "{}: {}".format(d, str(getattr(self, d)))
 
     def out_info(self):
         """Print the state of the Dynamical System."""
@@ -127,26 +127,30 @@ class BaseDynSys(object):
         #             s += '{}={}, '.format(key, value)
         #         out += '\t[{}]\n'.format(s)
         out += 'List of defined orbist:\n'
-        for orb in self._orbits:
+        for orb in self._Orbits:
             out += ' > {}\n'.format(orb.__str__())
         out += '\n=====================================\n'
         return out
 
     def plot_orbits(self, ax, vars_to_plot, colors=None, add_flow=True,
-                    add_legend=True, **kwargs):
+                    add_legend=True, arrow_kws=None, **kwargs):
+        if arrow_kws is None:
+            arrow_kws = dict()
+
         if colors is None:
             colorcycler = cycle(self.colors)
         else:
             colorcycler = cycle(colors)
 
-        for i, orb in enumerate(self._orbits):
+        for i, orb in enumerate(self._Orbits):
             color = next(colorcycler)
             orb.plot_orbit(ax=ax, vars_to_plot=vars_to_plot,
                            color=color, **kwargs)
             if add_flow:
+                arrow_kws['color'] = color
                 orb.plot_flow_over_orbit(ax=ax, vars_to_plot=vars_to_plot,
                                          flow_index=self.orbits[i]['arrow_pos'],
-                                         color=color, **kwargs)
+                                         arrow_kws=arrow_kws)
         if add_legend:
             ax.legend(loc='best')
         ax.set_xlabel(self.var_names[vars_to_plot[0]])
@@ -155,13 +159,13 @@ class BaseDynSys(object):
             ax.set_zlabel(self.var_names[vars_to_plot[2]])
 
     def triangle(self, fig=None, vars_to_plot=None, colors=None, add_flow=False,
-                 add_legend=False, **kwargs):
+                 add_legend=False, arrow_kws=None, **kwargs):
         if vars_to_plot is None:
             vars_to_plot = []
             for key, value in self.orbits[0]['vars'].iteritems():
                 vars_to_plot.append(key)
         if len(vars_to_plot) == 2:
-            warnings.warn('Triangle plots are useful for more thatn two dimensions')
+            warnings.warn('Triangle plots are useful for more than two dimensions')
             return
 
         if _DEBUG:
@@ -209,7 +213,7 @@ class BaseDynSys(object):
                     print 'subploty = {}'.format(subploty)
                 if subplotx >= subploty:
                     self.plot_orbits(ax=ax, vars_to_plot=[varx, vary],
-                                     add_flow=add_flow, add_legend=add_legend, **kwargs)
+                                     add_flow=add_flow, add_legend=add_legend, arrow_kws=arrow_kws, **kwargs)
                     if subploty != 0:
                         ax.set_ylabel('')
                     ax.tick_params(direction='in', pad=5)
@@ -254,16 +258,20 @@ if __name__ == "__main__":
                         colors='bright',)
     print dynsys
 
-    dynsys.plot_orbits(ax=ax, vars_to_plot=['x', 'y'], linewidth=2)
+    arrow_settings = {"angles": "xy", "scale_units=": "xy", "pivot": 'mid',
+                      "scale": None, "width": 0.005, "headlength": 5,
+                      'headwidth': 5, 'norm': True, 'rescale': 1.0, }
+
+    dynsys.plot_orbits(ax=ax, vars_to_plot=['x', 'y'], linewidth=2, arrow_kws=arrow_settings)
 
     # print 'The list of generated Orbits instances:\n', dynsys._orbits
     # for orb in dynsys._orbits:
     #     print orb
 
     #  TEST FOR TRIANGLE PLOTS
-    dynsys.triangle()
-    dynsys.triangle(vars_to_plot=['x', 'y', 'y'])
+    dynsys.triangle(add_flow=True, arrow_kws=arrow_settings) # Fails and shows Warning.
+    dynsys.triangle(vars_to_plot=['x', 'y', 'y'], add_flow=True, add_legend=True, arrow_kws=arrow_settings)
     # dynsys.triangle(vars_to_plot=['x', 'y', 'y','x'], add_legend=False)
-    dynsys.triangle(vars_to_plot=['x', 'y', 'x', 'y', 'x'], add_legend=False)
+    dynsys.triangle(vars_to_plot=['x', 'y', 'x', 'y', 'x'], add_flow=True, add_legend=False, arrow_kws=arrow_settings)
 
     plt.show()

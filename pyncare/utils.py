@@ -9,6 +9,7 @@
 """
 
 import numpy as np
+import matplotlib.patches as patches
 
 
 def plot_sphere(ax, phi_i=0, phi_f=2.0*np.pi,
@@ -48,59 +49,78 @@ def plot_circle(ax, r=1, theta_i=0, theta_f=2.0*np.pi, res=50, **kwargs):
     ax.plot(x, y, **kwargs)
 
 
-def plot_quiver_2D(ax, x, y, u, v, **kwargs):
-    """
-    Generic vector field flow  plotter
-    """
-    angles = kwargs.get('angles', 'xy')
+def plot_quiver_fancy_2D(ax, x, y, u, v, **kwargs):
+    """"Generic vector field using FancyArrowPatches."""
+    u = np.array(u)
+    v = np.array(v)
 
-    scale_units = kwargs.get('scale_units', 'xy')
+    N = np.sqrt(u ** 2 + v ** 2)
+    U, V = u / N, v / N
+    p = patches.FancyArrowPatch((x[0], y[0]),
+                                # ((x[0]+u[0])/10., (y[0]+v[0])/10.),
+                                ((x[0] + U[0]), (y[0] + V[0])),
+                                arrowstyle='simple',    # Default
+                                mutation_scale=20)
 
-    color = kwargs.get('color', 'k')
+    ax.add_patch(p)
 
-    pivot = kwargs.get('pivot', 'mid')
 
-    scale = kwargs.get('scale', None)
+def plot_quiver_2D(ax, x, y, u, v, arrow_kws):
+    """Generic vector field flow  plotter."""
+    angles = arrow_kws.get('angles', 'xy')
 
-    width = kwargs.get('width', 0.003)
+    scale_units = arrow_kws.get('scale_units', 'xy')
 
-    headlength = kwargs.get('headlength', 7)
+    color = arrow_kws.get('color', 'k')
 
-    headwidth = kwargs.get('headwidth', 5)
+    pivot = arrow_kws.get('pivot', 'mid')
 
-    norm = kwargs.get('norm', True)
+    scale = arrow_kws.get('scale', None)
 
-    rescale = kwargs.get('rescale', 1.0)
+    width = arrow_kws.get('width', 0.003)
+
+    headlength = arrow_kws.get('headlength', 7)
+
+    headwidth = arrow_kws.get('headwidth', 5)
+
+    norm = arrow_kws.get('norm', True)
+
+    rescale = arrow_kws.get('rescale', 1.0)
 
     u = np.array(u)
     v = np.array(v)
 
     if norm:
         N = np.sqrt(u**2 + v**2)
+        # print "N type:", type(N)
         U, V = u/N, v/N
     else:
         U, V = u, v
 
+    # print "U:", U
+
     U *= rescale
     V *= rescale
+
+    # print "U*rescale:", U
 
     ax.quiver(x, y, U, V, angles=angles, scale_units=scale_units,
               color=color, pivot=pivot, scale=scale,
               width=width, headlength=headlength, headwidth=headwidth)
 
 
-def plot_quiver_3D(ax, x, y, z, u, v, w, **kwargs):
-    color = kwargs.get('color', 'k')
+def plot_quiver_3D(ax, x, y, z, u, v, w, arrow_kws):
+    color = arrow_kws.get('color', 'k')
 
-    length = kwargs.get('length', 0.05)
+    length = arrow_kws.get('length', 0.05)
 
-    arrow_length_ratio = kwargs.get('arrow_length_ratio', 1)
+    arrow_length_ratio = arrow_kws.get('arrow_length_ratio', 1)
 
-    linewidths = kwargs.get('linewidths', 1.0)
+    linewidths = arrow_kws.get('linewidths', 1.0)
 
-    norm = kwargs.get('norm', True)
+    norm = arrow_kws.get('norm', True)
 
-    rescale = kwargs.get('rescale', 1.0)
+    rescale = arrow_kws.get('rescale', 1.0)
 
     u = np.array(u)
     v = np.array(v)
