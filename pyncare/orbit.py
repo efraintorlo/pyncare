@@ -93,7 +93,7 @@ class Orbit(object):
 
         indep_vars_list = []
         for key in indep_vars:
-            ind = self.init_cond.keys().index(key)
+            ind = list(self.init_cond.keys()).index(key)
             indep_vars_list.append(self.solution[:, ind])
 
         if args is None:
@@ -175,7 +175,7 @@ class Orbit(object):
         indep_vars_list = []
         indexes = []
         for key in indep_vars:
-            ind = self.init_cond.keys().index(key)
+            ind = list(self.init_cond.keys()).index(key)
             indexes.append(ind)
             indep_vars_list.append(self.solution[:, ind])
 
