@@ -92,7 +92,7 @@ class BaseDynSys(object):
         self._Orbits = []  # To be filled with Orbits instances
         for orb in self.orbits:
             d0 = collections.OrderedDict()  # must be an collections.OrderedDict
-            for key, value in orb['vars'].iteritems():  # fill the initial data
+            for key, value in orb['vars'].items():  # fill the initial data
                 d0[key] = value
             # print d0
             t = orb['t']                    # time to evolve the orbit
@@ -110,7 +110,7 @@ class BaseDynSys(object):
     def __call__(self, *args, **kwargs):
         """"Display some specific output."""
         for d in sorted(dir(self)):
-            print "{}: {}".format(d, str(getattr(self, d)))
+            print("{}: {}".format(d, str(getattr(self, d))))
 
     def out_info(self):
         """Print the state of the Dynamical System."""
@@ -162,14 +162,14 @@ class BaseDynSys(object):
                  add_legend=False, arrow_kws=None, **kwargs):
         if vars_to_plot is None:
             vars_to_plot = []
-            for key, value in self.orbits[0]['vars'].iteritems():
+            for key, value in self.orbits[0]['vars'].items():
                 vars_to_plot.append(key)
         if len(vars_to_plot) == 2:
             warnings.warn('Triangle plots are useful for more than two dimensions')
             return
 
         if _DEBUG:
-            print vars_to_plot
+            print(vars_to_plot)
 
         # Some magic numbers for pretty axis layout.
         M = len(vars_to_plot) - 1
@@ -205,12 +205,12 @@ class BaseDynSys(object):
                 subploty = j
                 ax = axes[subplotx, subploty]
                 if _DEBUG:
-                    print " -----------------------------"
-                    print '(i, j) = ({},{})'.format(i, j)
-                    print 'varx = {}'.format(varx)
-                    print 'vary = {}'.format(vary)
-                    print 'subplotx = {}'.format(subplotx)
-                    print 'subploty = {}'.format(subploty)
+                    print(" -----------------------------")
+                    print('(i, j) = ({},{})'.format(i, j))
+                    print('varx = {}'.format(varx))
+                    print('vary = {}'.format(vary))
+                    print('subplotx = {}'.format(subplotx))
+                    print('subploty = {}'.format(subploty))
                 if subplotx >= subploty:
                     self.plot_orbits(ax=ax, vars_to_plot=[varx, vary],
                                      add_flow=add_flow, add_legend=add_legend, arrow_kws=arrow_kws, **kwargs)
@@ -256,7 +256,7 @@ if __name__ == "__main__":
                         Ndim=2,
                         orbits=orbits,
                         colors='bright',)
-    print dynsys
+    print(dynsys)
 
     arrow_settings = {"angles": "xy", "scale_units=": "xy", "pivot": 'mid',
                       "scale": None, "width": 0.005, "headlength": 5,
