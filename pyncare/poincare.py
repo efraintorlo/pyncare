@@ -129,7 +129,7 @@ if __name__ == "__main__":
                              # colors='bright',
                              colors='black',
                              )
-    print dynsys
+    print(dynsys)
     # print dynsys._orbits
 
     arrow_settings_2d = {"angles": "xy",

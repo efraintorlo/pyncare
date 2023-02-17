@@ -68,7 +68,7 @@ class Orbit(object):
         # plot_list = []
         indexes = []
         for key in vars_to_plot:
-            ind = self.init_cond.keys().index(key)
+            ind = list(self.init_cond.keys()).index(key)
             indexes.append(ind)
 
         if len(vars_to_plot) is 2:
@@ -93,7 +93,7 @@ class Orbit(object):
 
         indep_vars_list = []
         for key in indep_vars:
-            ind = self.init_cond.keys().index(key)
+            ind = list(self.init_cond.keys()).index(key)
             indep_vars_list.append(self.solution[:, ind])
 
         if args is None:
@@ -122,7 +122,7 @@ class Orbit(object):
         if flow_index is None:
             sys.exit("flow_index must be a list of integers")
         if any(not isinstance(x, int) for x in flow_index):
-            print type(flow_index)
+            print(type(flow_index))
             sys.exit("flow_index must be a list of integers")
 
         if not self.is_solved:
@@ -130,7 +130,7 @@ class Orbit(object):
 
         indexes = []
         for key in vars_to_plot:
-            ind = self.init_cond.keys().index(key)
+            ind = list(self.init_cond.keys()).index(key)
             indexes.append(ind)
 
         vels = [self.model(init=self.solution[i], model_pars=self.model_pars) for i in flow_index if (i < len(self.solution[:, indexes[0]]))]
@@ -166,7 +166,7 @@ class Orbit(object):
         if flow_index is None:
             sys.exit("flow_index must be a list of integers")
         if any(not isinstance(x, int) for x in flow_index):
-            print type(flow_index)
+            print(type(flow_index))
             sys.exit("flow_index must be a list of integers")
 
         if not self.is_solved:
@@ -175,7 +175,7 @@ class Orbit(object):
         indep_vars_list = []
         indexes = []
         for key in indep_vars:
-            ind = self.init_cond.keys().index(key)
+            ind = list(self.init_cond.keys()).index(key)
             indexes.append(ind)
             indep_vars_list.append(self.solution[:, ind])
 
@@ -239,7 +239,7 @@ if __name__ == "__main__":
 
     orbit = Orbit(init_cond=d0, model=test_model, model_pars=[], t=t,
                   label='The_Label')
-    print orbit
+    print(orbit)
 
     arrow_settings = {"angles": "xy",
                       "scale_units=": "xy",
